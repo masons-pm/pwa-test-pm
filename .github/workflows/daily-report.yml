@@ -1,0 +1,37 @@
+name: Daily Report
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect issue stats
+        id: stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OPEN_ISSUES=$(gh issue list --state open --json number | jq length)
+          CLOSED_ISSUES=$(gh issue list --state closed --since 24h --json number | jq length)
+          BUG_COUNT=$(gh issue list --state open --label bug --json number | jq length)
+          CRITICAL_COUNT=$(gh issue list --state open --label critical --json number | jq length)
+          echo "open=$OPEN_ISSUES" >> $GITHUB_OUTPUT
+          echo "closed=$CLOSED_ISSUES" >> $GITHUB_OUTPUT
+          echo "bugs=$BUG_COUNT" >> $GITHUB_OUTPUT
+          echo "critical=$CRITICAL_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Send Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📊 *Ежедневный отчёт*  
+            ✅ Закрыто за сутки: ${{ steps.stats.outputs.closed }}  
+            🐞 Открыто багов: ${{ steps.stats.outputs.bugs }} (критических: ${{ steps.stats.outputs.critical }})  
+            📋 Всего открытых задач: ${{ steps.stats.outputs.open }}  
+            🚀 *Метрики:* (пока нет данных)  
+            🔥 *Инциденты:* (пока нет)
