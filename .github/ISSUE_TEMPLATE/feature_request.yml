@@ -1,25 +1,34 @@
 name: Feature request
-description: Предложить новую функциональность
+description: Предложить новую функцию или улучшение
 labels: ["enhancement"]
 body:
+  - type: input
+    id: title
+    attributes:
+      label: Краткое описание
+    validations:
+      required: true
   - type: textarea
     id: problem
     attributes:
-      label: Проблема, которую решает фича
-      placeholder: Описание текущей проблемы или возможности...
+      label: Какую проблему решает?
+      description: Опишите, с чем сейчас неудобно или что мешает
   - type: textarea
     id: solution
     attributes:
       label: Предлагаемое решение
+    validations:
+      required: true
   - type: dropdown
     id: priority
     attributes:
       label: Приоритет
       options:
-        - Critical (REC2DEP)
         - High
         - Medium
         - Low
+    validations:
+      required: true
   - type: dropdown
     id: team
     attributes:
@@ -28,3 +37,5 @@ body:
         - Backend (Марк)
         - Frontend (Макс)
         - DevOps/Support (Андрей)
+    validations:
+      required: true

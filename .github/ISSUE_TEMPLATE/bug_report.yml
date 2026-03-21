@@ -7,11 +7,18 @@ body:
     attributes:
       label: Окружение
       placeholder: prod / staging / dev
+    validations:
+      required: true
   - type: textarea
     id: steps
     attributes:
       label: Шаги воспроизведения
-      placeholder: 1. Перейти на страницу...\n2. Нажать кнопку...\n3. Увидеть ошибку...
+      placeholder: |
+        1. Перейти на страницу...
+        2. Нажать кнопку...
+        3. Увидеть ошибку...
+    validations:
+      required: true
   - type: textarea
     id: expected
     attributes:
@@ -25,6 +32,8 @@ body:
         - High
         - Medium
         - Low
+    validations:
+      required: true
   - type: dropdown
     id: team
     attributes:
@@ -33,3 +42,5 @@ body:
         - Backend (Марк)
         - Frontend (Макс)
         - DevOps/Support (Андрей)
+    validations:
+      required: true
