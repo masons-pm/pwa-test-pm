@@ -52,8 +52,8 @@ jobs:
           # Optional: assign assignee
           ASSIGNEE=""
           case "$TEAM" in
-            "Backend") ASSIGNEE="mark_login" ;;   # замените на реальный логин
-            "Frontend") ASSIGNEE="max_login" ;;
+            "Backend") ASSIGNEE="masons-pm" ;;   # замените на реальный логин
+            "Frontend") ASSIGNEE="masons-pm" ;;
           esac
           if [ -n "$ASSIGNEE" ]; then
             gh issue edit $ISSUE_NUMBER --add-assignee "$ASSIGNEE"
