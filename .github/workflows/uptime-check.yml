@@ -1,0 +1,34 @@
+name: Uptime Check
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check domain availability
+        id: check
+        run: |
+          URL="https://google.com"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Domain is down (HTTP $STATUS)"
+            echo "down=true" >> $GITHUB_OUTPUT
+          else
+            echo "Domain is up"
+          fi
+
+      - name: Create issue if domain down
+        if: steps.check.outputs.down == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "🚨 Тестовый домен недоступен" \
+            --body "Домен вернул HTTP код ${{ steps.check.outputs.status }}. Требуется проверка." \
+            --label "incident" \
+            --assignee "masons-pm"   # замените на свой логин или удалите эту строку
