@@ -1,0 +1,52 @@
+name: Auto-label new issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse issue body and add labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          BODY="${{ github.event.issue.body }}"
+
+          # Извлечение значения поля (формат: ### Priority\nCritical)
+          extract_field() {
+            echo "$BODY" | grep -oP "(?<=### $1\s*).*" | head -1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+          }
+
+          PRIORITY=$(extract_field "Priority")
+          TEAM=$(extract_field "Команда")
+
+          LABELS=""
+
+          case "$PRIORITY" in
+            "Critical") LABELS="$LABELS Critical" ;;
+            "High") LABELS="$LABELS High" ;;
+            "Medium") LABELS="$LABELS Medium" ;;
+            "Low") LABELS="$LABELS Low" ;;
+          esac
+
+          case "$TEAM" in
+            "Backend") LABELS="$LABELS Backend" ;;
+            "Frontend") LABELS="$LABELS Frontend" ;;
+          esac
+
+          if [ -n "$LABELS" ]; then
+            gh issue edit $ISSUE_NUMBER --add-label "$LABELS"
+          fi
+
+          # (Опционально) Назначение assignee на основе команды
+          ASSIGNEE=""
+          case "$TEAM" in
+            "Backend") ASSIGNEE="mark_login" ;;   # замените на реальный логин
+            "Frontend") ASSIGNEE="max_login" ;;
+          esac
+          if [ -n "$ASSIGNEE" ]; then
+            gh issue edit $ISSUE_NUMBER --add-assignee "$ASSIGNEE"
+          fi
