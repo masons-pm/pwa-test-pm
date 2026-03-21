@@ -30,21 +30,22 @@ jobs:
           PRIORITY=$(extract_field "Priority")
           TEAM=$(extract_field "Команда")
 
-          LABELS=""
+          # Массив для меток
+          LABELS=()
 
           case "$PRIORITY" in
-            "Critical") LABELS="$LABELS Critical" ;;
-            "High") LABELS="$LABELS High" ;;
-            "Medium") LABELS="$LABELS Medium" ;;
-            "Low") LABELS="$LABELS Low" ;;
+            "Critical") LABELS+=("Critical") ;;
+            "High") LABELS+=("High") ;;
+            "Medium") LABELS+=("Medium") ;;
+            "Low") LABELS+=("Low") ;;
           esac
 
           case "$TEAM" in
-            "Backend") LABELS="$LABELS Backend" ;;
-            "Frontend") LABELS="$LABELS Frontend" ;;
+            "Backend") LABELS+=("Backend") ;;
+            "Frontend") LABELS+=("Frontend") ;;
           esac
 
-          if [ -n "$LABELS" ]; then
-            echo "Adding labels: $LABELS"
-            gh issue edit $ISSUE_NUMBER --add-label "$LABELS"
+          if [ ${#LABELS[@]} -gt 0 ]; then
+            echo "Adding labels: ${LABELS[@]}"
+            gh issue edit $ISSUE_NUMBER --add-label "${LABELS[@]}"
           fi
