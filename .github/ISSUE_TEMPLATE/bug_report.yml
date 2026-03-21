@@ -23,24 +23,3 @@ body:
     id: expected
     attributes:
       label: Ожидаемое поведение
-  - type: dropdown
-    id: priority
-    attributes:
-      label: Приоритет
-      options:
-        - Critical (REC2DEP)
-        - High
-        - Medium
-        - Low
-    validations:
-      required: true
-  - type: dropdown
-    id: team
-    attributes:
-      label: Команда
-      options:
-        - Backend (Марк)
-        - Frontend (Макс)
-        - DevOps/Support (Андрей)
-    validations:
-      required: true
