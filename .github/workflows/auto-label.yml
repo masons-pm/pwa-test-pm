@@ -8,7 +8,6 @@ jobs:
   add-labels:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Parse issue body and add labels
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -16,8 +15,11 @@ jobs:
           ISSUE_NUMBER=${{ github.event.issue.number }}
           BODY="${{ github.event.issue.body }}"
 
+          # Функция извлечения значения поля
           extract_field() {
             local field="$1"
+            # Ищем строку с заголовком "### field"
+            # Берём всё после заголовка, разбиваем на строки, ищем первую непустую
             echo "$BODY" | awk -v f="$field" '
               BEGIN { found=0; value="" }
               /^### '"$field"'$/ { found=1; next }
@@ -49,7 +51,7 @@ jobs:
             gh issue edit $ISSUE_NUMBER --add-label "$LABELS"
           fi
 
-          # Optional: assign assignee
+          # Опционально: назначить assignee
           ASSIGNEE=""
           case "$TEAM" in
             "Backend") ASSIGNEE="masons-pm" ;;   # замените на реальный логин
