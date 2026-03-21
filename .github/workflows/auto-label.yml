@@ -15,9 +15,18 @@ jobs:
           ISSUE_NUMBER=${{ github.event.issue.number }}
           BODY="${{ github.event.issue.body }}"
 
-          # Извлечение значения поля (формат: ### Priority\nCritical)
+          # Функция извлечения значения поля
           extract_field() {
-            echo "$BODY" | grep -oP "(?<=### $1\s*).*" | head -1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+            local field="$1"
+            # Ищем строку с заголовком "### field"
+            # Берём всё после заголовка, разбиваем на строки, ищем первую непустую
+            echo "$BODY" | awk -v f="$field" '
+              BEGIN { found=0; value="" }
+              /^### '"$field"'$/ { found=1; next }
+              found == 1 && /^[[:space:]]*$/ { next }
+              found == 1 && /^[^#]/ { value=$0; exit }
+              END { print value }
+            ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
           }
 
           PRIORITY=$(extract_field "Priority")
@@ -38,10 +47,11 @@ jobs:
           esac
 
           if [ -n "$LABELS" ]; then
+            echo "Adding labels: $LABELS"
             gh issue edit $ISSUE_NUMBER --add-label "$LABELS"
           fi
 
-          # (Опционально) Назначение assignee на основе команды
+          # Опционально: назначить assignee
           ASSIGNEE=""
           case "$TEAM" in
             "Backend") ASSIGNEE="mark_login" ;;   # замените на реальный логин
