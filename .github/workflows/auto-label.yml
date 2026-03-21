@@ -30,7 +30,6 @@ jobs:
           PRIORITY=$(extract_field "Priority")
           TEAM=$(extract_field "Команда")
 
-          # Массив для меток
           LABELS=()
 
           case "$PRIORITY" in
@@ -45,7 +44,7 @@ jobs:
             "Frontend") LABELS+=("Frontend") ;;
           esac
 
-          if [ ${#LABELS[@]} -gt 0 ]; then
-            echo "Adding labels: ${LABELS[@]}"
-            gh issue edit $ISSUE_NUMBER --add-label "${LABELS[@]}"
-          fi
+          for label in "${LABELS[@]}"; do
+            echo "Adding label: $label"
+            gh issue edit $ISSUE_NUMBER --add-label "$label"
+          done
