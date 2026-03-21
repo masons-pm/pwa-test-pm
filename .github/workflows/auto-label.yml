@@ -50,13 +50,3 @@ jobs:
             echo "Adding labels: $LABELS"
             gh issue edit $ISSUE_NUMBER --add-label "$LABELS"
           fi
-
-          # Опционально: назначить assignee
-          ASSIGNEE=""
-          case "$TEAM" in
-            "Backend") ASSIGNEE="masons-pm" ;;   # замените на реальный логин
-            "Frontend") ASSIGNEE="masons-pm" ;;
-          esac
-          if [ -n "$ASSIGNEE" ]; then
-            gh issue edit $ISSUE_NUMBER --add-assignee "$ASSIGNEE"
-          fi
