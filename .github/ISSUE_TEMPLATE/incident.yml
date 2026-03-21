@@ -1,0 +1,26 @@
+name: Incident
+description: Сообщить о падении домена или критической проблеме доступности
+labels: ["incident", "critical"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Домен/сервис
+      placeholder: https://example.pwa
+  - type: textarea
+    id: impact
+    attributes:
+      label: Влияние
+      placeholder: Трафик, пользователи, функциональность...
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Время обнаружения
+  - type: dropdown
+    id: team
+    attributes:
+      label: Команда
+      options:
+        - Backend (Марк)
+        - Frontend (Макс)
+        - DevOps/Support (Андрей)

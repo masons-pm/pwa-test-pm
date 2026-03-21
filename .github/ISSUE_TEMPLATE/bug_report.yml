@@ -1,0 +1,35 @@
+name: Bug report
+description: Сообщить о баге
+labels: ["bug"]
+body:
+  - type: input
+    id: environment
+    attributes:
+      label: Окружение
+      placeholder: prod / staging / dev
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      placeholder: 1. Перейти на страницу...\n2. Нажать кнопку...\n3. Увидеть ошибку...
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемое поведение
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Приоритет
+      options:
+        - Critical (REC2DEP)
+        - High
+        - Medium
+        - Low
+  - type: dropdown
+    id: team
+    attributes:
+      label: Команда
+      options:
+        - Backend (Марк)
+        - Frontend (Макс)
+        - DevOps/Support (Андрей)
