@@ -1,0 +1,25 @@
+name: Weekly Progress Report
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # каждый понедельник в 9:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install PyGithub
+      - name: Generate and post report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_ISSUE_NUMBER: 1   # замените на реальный номер issue отчёта
+        run: python .github/scripts/weekly_report.py
