@@ -1,0 +1,37 @@
+name: Project Automation
+
+on:
+  issues:
+    types: [opened, reopened]
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  move_issue_to_todo:
+    name: Move new issue to Todo
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: Add issue to project and set status to Todo
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        with:
+          gh_token: ${{ secrets.PROJECTS_PAT }}
+          organization: YOUR_ORG_NAME       # или user: YOUR_USERNAME
+          project_id: YOUR_PROJECT_ID
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: "Todo"              # название колонки в вашем проекте
+
+  move_issue_to_Review_Testing_on_pr_merge:
+    name: Move linked issue to Review/Testing when PR merges
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - name: Move linked issue to Review/Testing
+        uses: leonsteinhaeuser/project-beta-automations@v2.1.0
+        with:
+          gh_token: ${{ secrets.PROJECTS_PAT }}
+          organization: YOUR_ORG_NAME       # или user: YOUR_USERNAME
+          project_id: YOUR_PROJECT_ID
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: "Review/Testing"
+          move_related_issues: true         # ключевой параметр: перемещает связанный issue
