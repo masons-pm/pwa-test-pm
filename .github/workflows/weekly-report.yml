@@ -21,5 +21,5 @@ jobs:
       - name: Generate and post report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPORT_ISSUE_NUMBER: 1   # замените на номер вашего issue для отчётов
+          REPORT_ISSUE_NUMBER: 16   # замените на номер вашего issue для отчётов
         run: python .github/scripts/weekly_report.py
