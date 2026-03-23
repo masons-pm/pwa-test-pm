@@ -18,7 +18,7 @@ def format_pr_info(pr):
 def main():
     token = os.getenv("GITHUB_TOKEN")
     repo_name = os.getenv("GITHUB_REPOSITORY")
-    report_issue_num = int(os.getenv("REPORT_ISSUE_NUMBER", "1"))
+    report_issue_num = int(os.getenv("REPORT_ISSUE_NUMBER", "16"))
 
     g = Github(token)
     repo = g.get_repo(repo_name)
