@@ -1,0 +1,66 @@
+name: Bug Report
+description: Сообщить о баге
+title: "[BUG]: "
+labels:
+  - Bug
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Краткое описание бага
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Окружение
+      placeholder: prod / staging / dev
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      placeholder: |
+        1. Перейти на ...
+        2. Нажать ...
+        3. Увидеть ошибку ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Как должно работать
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: team
+    attributes:
+      label: Команда
+      options:
+        - Backend
+        - Frontend
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Дополнительная информация

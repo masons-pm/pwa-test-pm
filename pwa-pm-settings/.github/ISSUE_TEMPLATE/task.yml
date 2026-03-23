@@ -1,0 +1,46 @@
+name: Task
+description: Обычная задача (техдолг, улучшение)
+title: "[TASK]: "
+labels:
+  - Task
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Add a title
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Описание
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: team
+    attributes:
+      label: Команда
+      options:
+        - Backend
+        - Frontend
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Дополнительная информация

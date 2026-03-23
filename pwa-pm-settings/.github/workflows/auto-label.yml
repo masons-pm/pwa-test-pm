@@ -1,0 +1,53 @@
+name: Auto-label new issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse issue body and add labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          BODY="${{ github.event.issue.body }}"
+
+          extract_field() {
+            local field="$1"
+            echo "$BODY" | awk -v f="$field" '
+              BEGIN { found=0; value="" }
+              /^### '"$field"'$/ { found=1; next }
+              found == 1 && /^[[:space:]]*$/ { next }
+              found == 1 && /^[^#]/ { value=$0; exit }
+              END { print value }
+            ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+          }
+
+          PRIORITY=$(extract_field "Priority")
+          TEAM=$(extract_field "Команда")
+
+          LABELS=()
+
+          case "$PRIORITY" in
+            "Critical") LABELS+=("Critical") ;;
+            "High") LABELS+=("High") ;;
+            "Medium") LABELS+=("Medium") ;;
+            "Low") LABELS+=("Low") ;;
+          esac
+
+          case "$TEAM" in
+            "Backend") LABELS+=("Backend") ;;
+            "Frontend") LABELS+=("Frontend") ;;
+          esac
+
+          for label in "${LABELS[@]}"; do
+            echo "Adding label: $label"
+            gh issue edit $ISSUE_NUMBER --add-label "$label"
+          done
